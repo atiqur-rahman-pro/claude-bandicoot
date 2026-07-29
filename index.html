@@ -205,35 +205,45 @@
       width: 100%;
       display: none;
       justify-content: space-between;
-      padding: 0 20px;
+      padding: 0 16px;
       z-index: 15;
       pointer-events: auto;
     }
 
     .touch-btn {
-      width: 65px;
-      height: 65px;
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(8px);
-      border: 2px solid rgba(255, 255, 255, 0.4);
+      -webkit-backdrop-filter: blur(8px);
+      border: 2px solid rgba(255, 255, 255, 0.5);
       color: white;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       display: flex;
       justify-content: center;
       align-items: center;
       user-select: none;
       touch-action: manipulation;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
 
     .touch-btn:active {
-      background: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.6);
+      transform: scale(0.92);
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px), (pointer: coarse) {
       #mobile-controls { display: flex; }
+      .hud-top { gap: 8px; flex-wrap: wrap; justify-content: center; }
+      .hud-card { padding: 6px 12px; gap: 8px; border-radius: 12px; }
+      .hud-value { font-size: 1.1rem; }
+      .hud-icon { font-size: 1.2rem; }
+      .hud-label { font-size: 0.65rem; }
+      .gauntlet-badge { font-size: 0.75rem; padding: 6px 12px; }
       .title-logo { font-size: 2.2rem; }
-      .controls-guide { flex-direction: column; gap: 10px; }
+      .subtitle { font-size: 0.9rem; letter-spacing: 2px; }
+      .controls-guide { flex-direction: column; gap: 8px; padding: 12px 16px; margin-top: 20px; }
     }
 
     /* Screen Shake Keyframe */
@@ -1157,12 +1167,55 @@
       renderer.render(scene, camera);
     }
 
-    // Handle Window Resize
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+    // Handle Touch Swipe Gestures for Mobile Screen Play
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    window.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      if (!gameState.active) return;
+      const diffX = e.changedTouches[0].screenX - touchStartX;
+      const diffY = e.changedTouches[0].screenY - touchStartY;
+
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (Math.abs(diffX) > 30) {
+          if (diffX > 0) moveRight();
+          else moveLeft();
+        }
+      } else {
+        if (Math.abs(diffY) > 30) {
+          if (diffY < 0) jump();
+          else slide();
+        }
+      }
+    }, { passive: true });
+
+    // Handle Responsive Window Resize & Mobile Portrait Camera Adjust
+    function handleResize() {
+      const aspect = window.innerWidth / window.innerHeight;
+      camera.aspect = aspect;
+
+      // Adjust camera FOV and position for mobile portrait screens so all 3 lanes are fully visible
+      if (aspect < 1.0) {
+        camera.fov = 60 / Math.max(aspect, 0.55);
+        camera.position.y = 5.2;
+        camera.position.z = 10.5;
+      } else {
+        camera.fov = 60;
+        camera.position.y = 4.5;
+        camera.position.z = 9;
+      }
+
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial call
 
     // Start Render Loop
     animate();
