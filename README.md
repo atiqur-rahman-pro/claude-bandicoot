@@ -18,7 +18,7 @@ An action-packed 3D browser platformer runner inspired by *Crash Bandicoot*, bui
 ### Option B: Play Locally on your Computer
 1. Download this repository by clicking **Code → Download ZIP** (or run `git clone https://github.com/atiqur-rahman-pro/claude-bandicoot.git`).
 2. Extract the ZIP file.
-3. Double-click **`index.html`** — it opens and runs immediately in Google Chrome, Microsoft Edge, or Firefox!
+3. Double-click **`index.html`** — it will open and start playing immediately in Google Chrome, Microsoft Edge, or Firefox!
 
 ---
 
@@ -57,3 +57,19 @@ An action-packed 3D browser platformer runner inspired by *Crash Bandicoot*, bui
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👤 Author Identity & Connect
+
+<div align="center">
+
+### **Designed & Developed by Atiqur Rahman**
+*Senior Software QA & Test Automation Specialist*
+
+[![Microsoft Playwright](https://img.shields.io/badge/MICROSOFT_PLAYWRIGHT-OPEN_SOURCE_CONTRIBUTOR-0078D4?style=for-the-badge&logo=microsoft&logoColor=white)](https://github.com/microsoft/playwright-python/pull/3157)
+[![YouTube](https://img.shields.io/badge/YOUTUBE-SUBSCRIBE_NOW-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@Digital_Digest_Live)  
+[![GitHub](https://img.shields.io/badge/GITHUB-ATIQUR--RAHMAN--PRO-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/atiqur-rahman-pro)
+[![LinkedIn](https://img.shields.io/badge/LINKEDIN-CONNECT_ME-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/atiqur-rahman-pro)
+
+</div>
