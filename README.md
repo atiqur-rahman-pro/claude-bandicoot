@@ -1,14 +1,39 @@
 # 🎮 Claude Bandicoot: Shumer's Gauntlet Loop
 
+[![Play Live Game](https://img.shields.io/badge/🎮_PLAY_LIVE_GAME-Click_Here-success?style=for-the-badge&logo=googlechrome&logoColor=white)](https://atiqur-rahman-pro.github.io/claude-bandicoot/)
 [![Three.js](https://img.shields.io/badge/Three.js-r128-black?style=for-the-badge&logo=three.js)](https://threejs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![HTML5](https://img.shields.io/badge/HTML5-Single_File_App-orange?style=for-the-badge&logo=html5)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 
 An action-packed 3D browser platformer runner inspired by *Crash Bandicoot*, built using **Three.js**, procedural 3D modeling, Web Audio API synth SFX, particle effects, and glassmorphic UI.
 
 ---
 
-## 🔥 Features
+## 🕹️ HOW TO PLAY THE GAME
+
+### Option A: Play Instantly in your Browser (No Download Needed!)
+👉 **[Click Here to Play Live Game](https://atiqur-rahman-pro.github.io/claude-bandicoot/)**
+
+---
+
+### Option B: Play Locally on your Computer
+1. Download this repository by clicking **Code → Download ZIP** (or run `git clone https://github.com/atiqur-rahman-pro/claude-bandicoot.git`).
+2. Extract the ZIP file.
+3. Double-click **`index.html`** — it opens and runs immediately in Google Chrome, Microsoft Edge, or Firefox!
+
+---
+
+## 🎮 Game Controls
+
+| Action | Keyboard | Touch / Mobile |
+| :--- | :--- | :--- |
+| **Move Lanes** | `A` / `D` or `←` / `→` | ◀ / ▶ Touch Buttons |
+| **Jump** | `W` / `↑` | ▲ Touch Button |
+| **Slide** | `S` / `↓` | ▼ Touch Button |
+| **Spin Attack** | `SPACE` / `E` | 🌀 Touch Button |
+
+---
+
+## 🔥 Game Features
 
 - **Procedural 3D Character**: Custom procedural 3D Claude Bandicoot model with skeletal running, jumping, spinning, and sliding animations.
 - **Action Mechanics**:
@@ -26,44 +51,6 @@ An action-packed 3D browser platformer runner inspired by *Crash Bandicoot*, bui
   - 🛡️ **Aku Aku Mask** — Floating shield companion giving extra hit protection.
 - **Pure Web Audio API**: Procedural sound synth for jumps, fruit pickups, crate breaks, and explosions (no external audio files required).
 - **Zero-Build Architecture**: Entire game packaged in a single standalone HTML file.
-
----
-
-## 🕹️ Controls
-
-| Action | Keyboard | Touch / Mobile |
-| :--- | :--- | :--- |
-| **Move Lanes** | `A` / `D` or `←` / `→` | ◀ / ▶ Touch Buttons |
-| **Jump** | `W` / `↑` | ▲ Touch Button |
-| **Slide** | `S` / `↓` | ▼ Touch Button |
-| **Spin Attack** | `SPACE` / `E` | 🌀 Touch Button |
-
----
-
-## ⚡ Quick Start
-
-No Node.js or build tools required! Simply clone and open `index.html` in any web browser.
-
-```bash
-# Clone the repository
-git clone https://github.com/YOUR_USERNAME/claude-bandicoot.git
-
-# Navigate into the folder
-cd claude-bandicoot
-
-# Open index.html directly or serve locally
-python -m http.server 8080
-```
-
-Open `http://localhost:8080` in your browser and play!
-
----
-
-## 🛠️ Built With
-
-* [Three.js](https://threejs.org/) - 3D Graphics Library
-* [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) - Procedural Audio Synthesizer
-* Vanilla CSS3 - Glassmorphism UI & Responsive Touch Controls
 
 ---
 
