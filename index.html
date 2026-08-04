@@ -359,7 +359,7 @@
     </div>
 
     <div style="margin-top: 20px; font-size: 0.85rem; color: #94a3b8; letter-spacing: 0.5px; text-align: center;">
-      Created by <a href="https://github.com/atiqur-rahman-pro" target="_blank" rel="noopener noreferrer" style="color: #ffb703; text-decoration: none; font-weight: 700;">Atiqur Rahman</a> | <a href="https://atiqur-rahman-pro.github.io/" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none; font-weight: 600;">Portfolio</a> | <a href="https://atiqur-rahman-pro.github.io/cv/" target="_blank" rel="noopener noreferrer" style="color: #4ade80; text-decoration: none; font-weight: 600;">Live Web CV</a> | <a href="https://sleepapneabd.com/" target="_blank" rel="noopener noreferrer" style="color: #a855f7; text-decoration: none; font-weight: 600;">SleepApneaBD</a>
+      Created by <a href="https://github.com/atiqur-rahman-pro" target="_blank" rel="noopener noreferrer" style="color: #ffb703; text-decoration: none; font-weight: 700;">Atiqur Rahman</a> | <a href="https://atiqur-rahman-pro.github.io/" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none; font-weight: 600;">Portfolio</a> | <a href="https://atiqur-rahman-pro.github.io/cv/" target="_blank" rel="noopener noreferrer" style="color: #4ade80; text-decoration: none; font-weight: 600;">Live Web CV</a>
     </div>
   </div>
 
@@ -369,7 +369,7 @@
     <div class="subtitle" id="final-stats">Loops Survived: 0 | Score: 0</div>
     <button class="btn-main" id="retry-btn">Try Again</button>
     <div style="margin-top: 20px; font-size: 0.85rem; color: #94a3b8; letter-spacing: 0.5px; text-align: center;">
-      Created by <a href="https://github.com/atiqur-rahman-pro" target="_blank" rel="noopener noreferrer" style="color: #ffb703; text-decoration: none; font-weight: 700;">Atiqur Rahman</a> | <a href="https://atiqur-rahman-pro.github.io/" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none; font-weight: 600;">Portfolio</a> | <a href="https://atiqur-rahman-pro.github.io/cv/" target="_blank" rel="noopener noreferrer" style="color: #4ade80; text-decoration: none; font-weight: 600;">Live Web CV</a> | <a href="https://sleepapneabd.com/" target="_blank" rel="noopener noreferrer" style="color: #a855f7; text-decoration: none; font-weight: 600;">SleepApneaBD</a>
+      Created by <a href="https://github.com/atiqur-rahman-pro" target="_blank" rel="noopener noreferrer" style="color: #ffb703; text-decoration: none; font-weight: 700;">Atiqur Rahman</a> | <a href="https://atiqur-rahman-pro.github.io/" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none; font-weight: 600;">Portfolio</a> | <a href="https://atiqur-rahman-pro.github.io/cv/" target="_blank" rel="noopener noreferrer" style="color: #4ade80; text-decoration: none; font-weight: 600;">Live Web CV</a>
     </div>
   </div>
 
@@ -726,6 +726,7 @@
     }
 
     const claude = createClaudeMesh();
+    claude.rotation.y = Math.PI; // Face FORWARD (away from camera, into the track)
     scene.add(claude);
 
     // --- AKU AKU SHIELD MESH ---
@@ -1160,7 +1161,7 @@
           gameState.spinTimer--;
           if (gameState.spinTimer <= 0) {
             gameState.isSpinning = false;
-            claude.rotation.y = 0;
+            claude.rotation.y = Math.PI; // Reset to forward-facing
           }
         }
 
@@ -1196,11 +1197,14 @@
           // Rotation effect
           if (obj.objType === 'WUMPA') obj.rotation.y += 0.05;
           if (obj.objType === 'AKU_PICKUP') obj.rotation.y += 0.04;
+          if (obj.objType === 'GUNMAN') obj.rotation.y += 0.02; // Gunman idle sway
 
-          // Collision Check with Claude
-          const dist = claude.position.distanceTo(obj.position);
+          // Collision Check with Claude (use getWorldPosition for THREE.Group objects like GUNMAN)
+          const objWorldPos = new THREE.Vector3();
+          obj.getWorldPosition(objWorldPos);
+          const dist = claude.position.distanceTo(objWorldPos);
 
-          if (dist < 1.25) {
+          if (dist < 1.5) {
             // Collect Wumpa
             if (obj.objType === 'WUMPA') {
               scene.remove(obj);
