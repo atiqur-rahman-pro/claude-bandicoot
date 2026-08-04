@@ -338,8 +338,8 @@
       <div class="control-item"><span class="key-cap">SPACE</span> Spin Attack</div>
     </div>
 
-    <div style="margin-top: 20px; font-size: 0.85rem; color: #94a3b8; letter-spacing: 0.5px;">
-      Created by <a href="https://github.com/atiqur-rahman-pro" target="_blank" rel="noopener noreferrer" style="color: #ffb703; text-decoration: none; font-weight: 700;">Atiqur Rahman</a> | <a href="https://atiqur-rahman-pro.github.io/" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none; font-weight: 600;">Live Portfolio</a>
+    <div style="margin-top: 20px; font-size: 0.85rem; color: #94a3b8; letter-spacing: 0.5px; text-align: center;">
+      Created by <a href="https://github.com/atiqur-rahman-pro" target="_blank" rel="noopener noreferrer" style="color: #ffb703; text-decoration: none; font-weight: 700;">Atiqur Rahman</a> | <a href="https://atiqur-rahman-pro.github.io/" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none; font-weight: 600;">Portfolio</a> | <a href="https://atiqur-rahman-pro.github.io/cv/" target="_blank" rel="noopener noreferrer" style="color: #4ade80; text-decoration: none; font-weight: 600;">Live Web CV</a>
     </div>
   </div>
 
@@ -348,8 +348,8 @@
     <h1 class="title-logo" style="background: linear-gradient(180deg, #ff4d4d 0%, #990000 100%); -webkit-background-clip: text;">GAUNTLET OVER</h1>
     <div class="subtitle" id="final-stats">Loops Survived: 0 | Score: 0</div>
     <button class="btn-main" id="retry-btn">Try Again</button>
-    <div style="margin-top: 20px; font-size: 0.85rem; color: #94a3b8; letter-spacing: 0.5px;">
-      Created by <a href="https://github.com/atiqur-rahman-pro" target="_blank" rel="noopener noreferrer" style="color: #ffb703; text-decoration: none; font-weight: 700;">Atiqur Rahman</a> | <a href="https://atiqur-rahman-pro.github.io/" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none; font-weight: 600;">Live Portfolio</a>
+    <div style="margin-top: 20px; font-size: 0.85rem; color: #94a3b8; letter-spacing: 0.5px; text-align: center;">
+      Created by <a href="https://github.com/atiqur-rahman-pro" target="_blank" rel="noopener noreferrer" style="color: #ffb703; text-decoration: none; font-weight: 700;">Atiqur Rahman</a> | <a href="https://atiqur-rahman-pro.github.io/" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none; font-weight: 600;">Portfolio</a> | <a href="https://atiqur-rahman-pro.github.io/cv/" target="_blank" rel="noopener noreferrer" style="color: #4ade80; text-decoration: none; font-weight: 600;">Live Web CV</a>
     </div>
   </div>
 
@@ -454,6 +454,34 @@
         gain.connect(this.ctx.destination);
         osc.start();
         osc.stop(this.ctx.currentTime + 0.4);
+      }
+      playSquishSound() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(80, this.ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.5, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.2);
+      }
+      playDartSound() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.1);
       }
     }
 
@@ -778,11 +806,41 @@
       activeParticles = [];
     }
 
+    function createGunman() {
+      const gunmanGroup = new THREE.Group();
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0xc2410c, roughness: 0.5 });
+      const headMat = new THREE.MeshStandardMaterial({ color: 0xfde047, roughness: 0.4 });
+      const gunMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.6 });
+
+      const body = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.9, 0.5), bodyMat);
+      body.position.y = 0.65;
+      gunmanGroup.add(body);
+
+      const head = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), headMat);
+      head.position.y = 1.35;
+      gunmanGroup.add(head);
+
+      const hatGeo = new THREE.ConeGeometry(0.2, 0.4, 4);
+      const hatMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+      const hat = new THREE.Mesh(hatGeo, hatMat);
+      hat.position.set(0, 1.75, 0);
+      gunmanGroup.add(hat);
+
+      const gun = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 0.8, 8), gunMat);
+      gun.rotation.x = Math.PI / 2;
+      gun.position.set(0.4, 0.7, 0.4);
+      gunmanGroup.add(gun);
+
+      gunmanGroup.objType = 'GUNMAN';
+      gunmanGroup.isSquished = false;
+      return gunmanGroup;
+    }
+
     function spawnRow(zPos) {
       const typeChoice = Math.random();
 
       // Spawn Wumpa Fruit Trail
-      if (typeChoice < 0.4) {
+      if (typeChoice < 0.35) {
         const lane = Math.floor(Math.random() * 3);
         for (let k = 0; k < 3; k++) {
           const fruit = new THREE.Mesh(wumpaGeo, wumpaMat);
@@ -792,8 +850,16 @@
           activeObjects.push(fruit);
         }
       } 
+      // Spawn Gunman Enemy!
+      else if (typeChoice < 0.55) {
+        const lane = Math.floor(Math.random() * 3);
+        const gunman = createGunman();
+        gunman.position.set(LANES[lane], 0, zPos);
+        scene.add(gunman);
+        activeObjects.push(gunman);
+      }
       // Spawn Aku Mask Shield Pickup
-      else if (typeChoice < 0.5) {
+      else if (typeChoice < 0.65) {
         const lane = Math.floor(Math.random() * 3);
         const maskPickup = createAkuMask();
         maskPickup.position.set(LANES[lane], 1.0, zPos);
@@ -1092,6 +1158,38 @@
               document.getElementById('shield-count').style.color = '#22c55e';
               audio.playFruit();
               continue;
+            }
+
+            // Hit Gunman Enemy
+            if (obj.objType === 'GUNMAN') {
+              if (gameState.isJumping && claude.position.y > 0.4) {
+                // Jump Stomp on Gunman -> Squish & Bounce!
+                createShatterParticles(obj.position, 0xc2410c);
+                scene.remove(obj);
+                activeObjects.splice(i, 1);
+                gameState.wumpa += 5;
+                gameState.jumpVelocity = 0.28; // Bounce back up!
+                document.getElementById('fruit-count').innerText = gameState.wumpa;
+                audio.playSquishSound();
+                continue;
+              } else if (gameState.isSpinning || gameState.isSliding) {
+                // Spin/Slide Kick Gunman -> Launch away!
+                createShatterParticles(obj.position, 0xfde047);
+                scene.remove(obj);
+                activeObjects.splice(i, 1);
+                gameState.wumpa += 5;
+                document.getElementById('fruit-count').innerText = gameState.wumpa;
+                audio.playSpin();
+                continue;
+              } else {
+                // Normal hit -> Take Damage
+                createShatterParticles(obj.position, 0xc2410c);
+                scene.remove(obj);
+                activeObjects.splice(i, 1);
+                audio.playExplosion();
+                takeDamage();
+                continue;
+              }
             }
 
             // Hit Wooden Crate
