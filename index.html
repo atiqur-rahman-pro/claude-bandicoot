@@ -396,6 +396,9 @@
         if (!this.ctx) {
           this.ctx = new (window.AudioContext || window.webkitAudioContext)();
         }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
       }
       playJump() {
         if (!this.ctx) return;
@@ -940,8 +943,13 @@
 
     function initObstacles() {
       clearAllObjects();
-      // Keep first 40 units CLEAR for safe start
-      for (let z = -45; z > -200; z -= 14) {
+      // GUARANTEE a prominent 3D Gunman enemy right in front of the player (z = -20) on start!
+      const gunman = createGunman();
+      gunman.position.set(LANES[1], 0, -20);
+      scene.add(gunman);
+      activeObjects.push(gunman);
+
+      for (let z = -35; z > -200; z -= 14) {
         spawnRow(z);
       }
     }
