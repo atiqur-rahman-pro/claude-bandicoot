@@ -3,14 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Claude Bandicoot: Shumer's Gauntlet Loop</title>
-  <meta name="description" content="Claude Bandicoot: Shumer's Gauntlet Loop - Action 3D WebGL Browser Platformer Runner by Atiqur Rahman built with Three.js">
-  <meta property="og:title" content="Claude Bandicoot: Shumer's Gauntlet Loop">
-  <meta property="og:description" content="Play instant 3D Browser Platformer Runner built with Three.js!">
+  <title>Claude Bandicoot: Shumer's Gauntlet Loop | Sleep Apnea BD</title>
+  <meta name="description" content="Claude Bandicoot: Shumer's Gauntlet Loop - Action 3D WebGL Browser Platformer Runner by Atiqur Rahman for Sleep Apnea BD (https://sleepapneabd.com/) built with Three.js">
+  <meta name="keywords" content="Sleep Apnea BD, SleepApneaBD, https://sleepapneabd.com/, Claude Bandicoot, Atiqur Rahman, Atiqur Rahman SDET, 3D WebGL Game, Three.js">
+  <meta name="author" content="Atiqur Rahman | Sleep Apnea BD (https://sleepapneabd.com/)">
+  <meta property="og:title" content="Claude Bandicoot: Shumer's Gauntlet Loop | Sleep Apnea BD">
+  <meta property="og:description" content="Play instant 3D Browser Platformer Runner built with Three.js for Sleep Apnea BD!">
   <meta property="og:url" content="https://atiqur-rahman-pro.github.io/claude-bandicoot/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Claude Bandicoot: Shumer's Gauntlet Loop">
+  <meta name="twitter:title" content="Claude Bandicoot: Shumer's Gauntlet Loop | Sleep Apnea BD">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Claude Bandicoot 3D Game",
+    "url": "https://atiqur-rahman-pro.github.io/claude-bandicoot/",
+    "author": {
+      "@type": "Person",
+      "name": "Atiqur Rahman",
+      "url": "https://atiqur-rahman-pro.github.io/"
+    },
+    "sponsor": {
+      "@type": "Organization",
+      "name": "Sleep Apnea BD",
+      "url": "https://sleepapneabd.com/"
+    }
+  }
+  </script>
   <style>
     * {
       margin: 0;
@@ -483,6 +503,20 @@
         osc.start();
         osc.stop(this.ctx.currentTime + 0.1);
       }
+      playFootstep() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(90, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.05);
+      }
     }
 
     const audio = new AudioController();
@@ -808,28 +842,43 @@
 
     function createGunman() {
       const gunmanGroup = new THREE.Group();
-      const bodyMat = new THREE.MeshStandardMaterial({ color: 0xc2410c, roughness: 0.5 });
-      const headMat = new THREE.MeshStandardMaterial({ color: 0xfde047, roughness: 0.4 });
-      const gunMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.6 });
+      // Bright high-contrast tribal materials
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.4 }); // Bright Amber/Red
+      const headMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.3 }); // Bright Yellow
+      const hatMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0x991b1b, emissiveIntensity: 0.5 }); // Glowing Red Feather
+      const gunMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.8, roughness: 0.2 }); // Shiny Silver Shotgun
+      const shieldMat = new THREE.MeshStandardMaterial({ color: 0xd97706, emissive: 0xb45309, emissiveIntensity: 0.4 }); // Tribal Shield
 
-      const body = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.9, 0.5), bodyMat);
-      body.position.y = 0.65;
+      // Torso / Body (1.4x larger scale for maximum visibility)
+      const body = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.1, 0.6), bodyMat);
+      body.position.y = 0.8;
+      body.castShadow = true;
       gunmanGroup.add(body);
 
-      const head = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), headMat);
-      head.position.y = 1.35;
+      // Head
+      const head = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.65, 0.65), headMat);
+      head.position.y = 1.65;
+      head.castShadow = true;
       gunmanGroup.add(head);
 
-      const hatGeo = new THREE.ConeGeometry(0.2, 0.4, 4);
-      const hatMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
-      const hat = new THREE.Mesh(hatGeo, hatMat);
-      hat.position.set(0, 1.75, 0);
+      // Giant Red Feather Hat
+      const hat = new THREE.Mesh(new THREE.ConeGeometry(0.35, 0.7, 6), hatMat);
+      hat.position.set(0, 2.2, 0);
+      hat.castShadow = true;
       gunmanGroup.add(hat);
 
-      const gun = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 0.8, 8), gunMat);
-      gun.rotation.x = Math.PI / 2;
-      gun.position.set(0.4, 0.7, 0.4);
-      gunmanGroup.add(gun);
+      // Giant Shotgun / Rifle pointing forward down the lane
+      const gunBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 1.2, 12), gunMat);
+      gunBarrel.rotation.x = Math.PI / 2;
+      gunBarrel.position.set(0.55, 0.9, 0.6);
+      gunBarrel.castShadow = true;
+      gunmanGroup.add(gunBarrel);
+
+      // Tribal Shield on left arm
+      const shield = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.9, 0.6), shieldMat);
+      shield.position.set(-0.55, 0.8, 0.3);
+      shield.castShadow = true;
+      gunmanGroup.add(shield);
 
       gunmanGroup.objType = 'GUNMAN';
       gunmanGroup.isSquished = false;
@@ -839,8 +888,8 @@
     function spawnRow(zPos) {
       const typeChoice = Math.random();
 
-      // Spawn Wumpa Fruit Trail
-      if (typeChoice < 0.35) {
+      // Spawn Wumpa Fruit Trail (30%)
+      if (typeChoice < 0.30) {
         const lane = Math.floor(Math.random() * 3);
         for (let k = 0; k < 3; k++) {
           const fruit = new THREE.Mesh(wumpaGeo, wumpaMat);
@@ -850,16 +899,16 @@
           activeObjects.push(fruit);
         }
       } 
-      // Spawn Gunman Enemy!
-      else if (typeChoice < 0.55) {
+      // Spawn PROMINENT Gunman Enemy! (35% chance - guaranteed every few seconds!)
+      else if (typeChoice < 0.65) {
         const lane = Math.floor(Math.random() * 3);
         const gunman = createGunman();
         gunman.position.set(LANES[lane], 0, zPos);
         scene.add(gunman);
         activeObjects.push(gunman);
       }
-      // Spawn Aku Mask Shield Pickup
-      else if (typeChoice < 0.65) {
+      // Spawn Aku Mask Shield Pickup (10%)
+      else if (typeChoice < 0.75) {
         const lane = Math.floor(Math.random() * 3);
         const maskPickup = createAkuMask();
         maskPickup.position.set(LANES[lane], 1.0, zPos);
@@ -868,7 +917,7 @@
         scene.add(maskPickup);
         activeObjects.push(maskPickup);
       }
-      // Spawn Crates / Obstacles
+      // Spawn Crates / Obstacles (25%)
       else {
         const lane = Math.floor(Math.random() * 3);
         let crateType = 'WOOD';
@@ -1124,6 +1173,11 @@
           claude.limbs.leftArm.rotation.x = -swing;
           claude.limbs.rightArm.rotation.x = swing;
           claude.position.y = Math.abs(Math.sin(frameCount * 0.25)) * 0.12;
+
+          // Trigger running footstep sound on leg impact
+          if (frameCount % 10 === 0) {
+            audio.playFootstep();
+          }
         }
 
         // 6. Update Objects (Movement & Collision)
