@@ -398,6 +398,10 @@
         Loop <span id="loop-number">1</span>: Normal
       </div>
 
+      <div class="hud-card" id="btn-pause-hud" style="cursor: pointer; pointer-events: auto; padding: 10px 16px; background: rgba(56, 189, 248, 0.25); border: 1px solid rgba(56, 189, 248, 0.4);" title="Pause Game (P / ESC)">
+        <span style="font-size: 1.1rem; color: #fff; font-weight: bold; display: flex; align-items: center; gap: 4px;">⏸️ PAUSE</span>
+      </div>
+
       <div class="hud-card">
         <div class="hud-item">
           <span class="hud-icon">🐾</span>
@@ -635,6 +639,7 @@
     
     let gameState = {
       active: false,
+      isPaused: false,
       speed: 0.32,
       baseSpeed: 0.32,
       distance: 0,
@@ -1013,12 +1018,16 @@
     }
 
     window.addEventListener('keydown', (e) => {
-      if (e.code === 'KeyA' || e.code === 'ArrowLeft') moveLeft();
-      if (e.code === 'KeyD' || e.code === 'ArrowRight') moveRight();
-      if (e.code === 'KeyW' || e.code === 'ArrowUp') jump();
-      if (e.code === 'KeyS' || e.code === 'ArrowDown') slide();
-      if (e.code === 'Space') spin();
-      if (e.code === 'KeyP' || e.code === 'Escape') togglePause();
+      const key = e.key ? e.key.toLowerCase() : '';
+      if (e.code === 'KeyA' || e.code === 'ArrowLeft' || key === 'a') moveLeft();
+      if (e.code === 'KeyD' || e.code === 'ArrowRight' || key === 'd') moveRight();
+      if (e.code === 'KeyW' || e.code === 'ArrowUp' || key === 'w') jump();
+      if (e.code === 'KeyS' || e.code === 'ArrowDown' || key === 's') slide();
+      if (e.code === 'Space' || key === ' ') spin();
+      if (e.code === 'KeyP' || e.code === 'Escape' || key === 'p' || key === 'escape') {
+        e.preventDefault();
+        togglePause();
+      }
     });
 
     document.getElementById('btn-left').addEventListener('click', moveLeft);
@@ -1026,6 +1035,7 @@
     document.getElementById('btn-jump').addEventListener('click', jump);
     document.getElementById('btn-slide').addEventListener('click', slide);
     document.getElementById('btn-spin').addEventListener('click', spin);
+    document.getElementById('btn-pause-hud').addEventListener('click', togglePause);
 
     // FIX ISSUE 6: Dynamic Leaderboard UI Updater
     function updateLeaderboardUI() {
