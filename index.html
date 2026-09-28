@@ -1249,7 +1249,14 @@
         if (gameState.loop >= 5 && !gameState.bossActive) {
           gameState.bossActive = true;
           cortexBoss.visible = true;
-          document.getElementById('boss-banner').style.display = 'block';
+          const banner = document.getElementById('boss-banner');
+          banner.style.display = 'block';
+          banner.style.opacity = '1';
+          setTimeout(() => {
+            banner.style.transition = 'opacity 0.6s ease';
+            banner.style.opacity = '0';
+            setTimeout(() => { banner.style.display = 'none'; }, 600);
+          }, 3000);
         }
 
         if (gameState.bossActive) {
