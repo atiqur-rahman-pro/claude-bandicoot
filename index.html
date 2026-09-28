@@ -477,12 +477,12 @@
     <button class="btn-main" id="resume-btn" style="background: linear-gradient(135deg, #0284c7, #0369a1);">Resume Game</button>
   </div>
 
-  <!-- Game Over Overlay -->
+  <!-- Game Over / Victory Overlay -->
   <div class="screen-overlay" id="gameover-screen" style="display: none; opacity: 0;">
-    <img src="Hero Character Art.png" alt="Claude Bandicoot Hero" style="max-width: 170px; width: 55%; height: auto; margin-bottom: 10px; filter: drop-shadow(0 10px 25px rgba(0,0,0,0.7));">
-    <h1 class="title-logo" style="background: linear-gradient(180deg, #ff4d4d 0%, #990000 100%); -webkit-background-clip: text;">GAUNTLET OVER</h1>
+    <img src="Hero Character Art.png" id="gameover-img" alt="Claude Bandicoot Hero" style="max-width: 160px; width: 50%; height: auto; margin-bottom: 10px; filter: drop-shadow(0 10px 25px rgba(0,0,0,0.7));">
+    <h1 class="title-logo" id="gameover-title" style="background: linear-gradient(180deg, #ff4d4d 0%, #990000 100%); -webkit-background-clip: text;">FAILED! TRY AGAIN</h1>
     <div class="subtitle" id="final-stats">Loops Survived: 0 | Score: 0</div>
-    <button class="btn-main" id="retry-btn">Try Again</button>
+    <button class="btn-main" id="retry-btn">TRY AGAIN</button>
   </div>
 
   <script>
@@ -659,8 +659,8 @@
     let gameState = {
       active: false,
       isPaused: false,
-      speed: 0.32,
-      baseSpeed: 0.32,
+      speed: 0.46,
+      baseSpeed: 0.46,
       distance: 0,
       loop: 1,
       lives: 5,
@@ -1082,8 +1082,8 @@
       audio.bgm.start();
 
       gameState.active = true;
-      gameState.speed = 0.32;
-      gameState.baseSpeed = 0.32;
+      gameState.speed = 0.46;
+      gameState.baseSpeed = 0.46;
       gameState.distance = 0;
       gameState.loop = 1;
       gameState.lives = 5;
@@ -1138,12 +1138,35 @@
     }
 
     function gameOver() {
+      showGameResult(false);
+    }
+
+    function showGameResult(isSuccess) {
       gameState.active = false;
       audio.bgm.stop();
-      audio.playExplosion();
+      if (isSuccess) {
+        audio.playWumpaSound();
+      } else {
+        audio.playExplosion();
+      }
 
       const finalScore = gameState.wumpa * 10 + gameState.cratesSmashed * 25;
       saveHighScore(finalScore);
+
+      const titleEl = document.getElementById('gameover-title');
+      const btnEl = document.getElementById('retry-btn');
+
+      if (isSuccess) {
+        titleEl.innerText = "🎉 CONGRATULATIONS!";
+        titleEl.style.background = "linear-gradient(180deg, #ffd166 0%, #22c55e 100%)";
+        titleEl.style.webkitBackgroundClip = "text";
+        btnEl.innerText = "PLAY AGAIN";
+      } else {
+        titleEl.innerText = "FAILED! TRY AGAIN";
+        titleEl.style.background = "linear-gradient(180deg, #ff4d4d 0%, #990000 100%)";
+        titleEl.style.webkitBackgroundClip = "text";
+        btnEl.innerText = "TRY AGAIN";
+      }
 
       document.getElementById('final-stats').innerText = `Loops Survived: ${gameState.loop} | Score: ${finalScore.toLocaleString()} pts`;
       const goScreen = document.getElementById('gameover-screen');
