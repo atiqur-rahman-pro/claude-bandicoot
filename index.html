@@ -491,7 +491,6 @@
       constructor() {
         this.ctx = null;
         this.isPlaying = false;
-        this.tempo = 125;
         this.step = 0;
         this.timer = null;
       }
@@ -502,23 +501,43 @@
         if (this.isPlaying || !this.ctx) return;
         this.isPlaying = true;
         this.step = 0;
-        const notes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 392.00, 329.63];
+
+        // Mild, soothing ambient tropical chord progression (Cmaj7 / Am7 / Fmaj7)
+        const padNotes = [
+          [130.81, 164.81, 196.00], // C3, E3, G3
+          [146.83, 174.61, 220.00], // D3, F3, A3
+          [110.00, 164.81, 196.00], // A2, E3, G3
+          [130.81, 174.61, 220.00]  // F3, A3, C4
+        ];
+
         this.timer = setInterval(() => {
-          if (!this.isPlaying || !gameState.active) return;
+          if (!this.isPlaying || !gameState.active || gameState.isPaused) return;
           try {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(notes[this.step % notes.length], this.ctx.currentTime);
-            gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.18);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start();
-            osc.stop(this.ctx.currentTime + 0.18);
+            const chord = padNotes[this.step % padNotes.length];
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(450, this.ctx.currentTime); // Soft warm low-pass filter
+
+            chord.forEach(freq => {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'sine'; // Pure smooth soft sine wave
+              osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+              // Ultra-soft mild volume envelope
+              gain.gain.setValueAtTime(0.018, this.ctx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.45);
+
+              osc.connect(filter);
+              filter.connect(gain);
+              gain.connect(this.ctx.destination);
+
+              osc.start();
+              osc.stop(this.ctx.currentTime + 0.45);
+            });
             this.step++;
           } catch(e) {}
-        }, (60 / this.tempo) * 1000 / 2);
+        }, 600); // Relaxed, slow ambient pulse (600ms)
       }
       stop() {
         this.isPlaying = false;
