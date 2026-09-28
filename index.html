@@ -466,6 +466,13 @@
     </div>
   </div>
 
+  <!-- Pause Overlay -->
+  <div class="screen-overlay" id="pause-screen" style="display: none; opacity: 0; z-index: 25;">
+    <h1 class="title-logo" style="background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%); -webkit-background-clip: text;">GAME PAUSED</h1>
+    <div class="subtitle">Press P or ESC to Resume</div>
+    <button class="btn-main" id="resume-btn" style="background: linear-gradient(135deg, #0284c7, #0369a1);">Resume Game</button>
+  </div>
+
   <!-- Game Over Overlay -->
   <div class="screen-overlay" id="gameover-screen" style="display: none; opacity: 0;">
     <img src="Hero Character Art.png" alt="Claude Bandicoot Hero" style="max-width: 170px; width: 55%; height: auto; margin-bottom: 10px; filter: drop-shadow(0 10px 25px rgba(0,0,0,0.7));">
@@ -1011,6 +1018,7 @@
       if (e.code === 'KeyW' || e.code === 'ArrowUp') jump();
       if (e.code === 'KeyS' || e.code === 'ArrowDown') slide();
       if (e.code === 'Space') spin();
+      if (e.code === 'KeyP' || e.code === 'Escape') togglePause();
     });
 
     document.getElementById('btn-left').addEventListener('click', moveLeft);
@@ -1138,6 +1146,23 @@
       }
     }
 
+    function togglePause() {
+      if (!gameState.active && !gameState.isPaused) return;
+      gameState.isPaused = !gameState.isPaused;
+      if (gameState.isPaused) {
+        audio.bgm.stop();
+        const pScreen = document.getElementById('pause-screen');
+        pScreen.style.display = 'flex';
+        setTimeout(() => pScreen.style.opacity = '1', 10);
+      } else {
+        audio.bgm.start();
+        const pScreen = document.getElementById('pause-screen');
+        pScreen.style.opacity = '0';
+        setTimeout(() => pScreen.style.display = 'none', 300);
+      }
+    }
+
+    document.getElementById('resume-btn').addEventListener('click', togglePause);
     document.getElementById('start-btn').addEventListener('click', startGame);
     document.getElementById('retry-btn').addEventListener('click', startGame);
 
@@ -1151,7 +1176,7 @@
       const delta = Math.min(clock.getDelta(), 0.1);
       const timeScale = delta * 60;
 
-      if (gameState.active) {
+      if (gameState.active && !gameState.isPaused) {
         gameState.distance += gameState.speed * timeScale;
         gameState.loop = Math.floor(gameState.distance / 300) + 1;
 
